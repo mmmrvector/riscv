@@ -15,14 +15,29 @@
 #define F3_SUB 0
 #define F3_SLL 1
 #define F3_MULH 1
-
+#define F3_SLT 2
+#define F3_XOR 4
+#define F3_DIV 4
+#define F3_SRL 5
+#define F3_SRA 5
+#define F3_OR 6
+#define F3_REM 6
+#define F3_AND 7
 
 #define F7_MSE 1
 #define F7_ADD 0
 #define F7_MUL 1
 #define F7_SUB 32
 #define F7_SLL 0
-
+#define F7_MULH 1
+#define F7_SLT 0
+#define F7_XOR 0
+#define F7_DIV 1
+#define F7_SRL 0
+#define F7_SRA 32
+#define F7_OR 0
+#define F7_REM 1
+#define F7_AND 0
 
 #define OP_I 19
 #define F3_ADDI 0
@@ -56,9 +71,11 @@
 #define DIV 3
 #define AND 4
 #define OR 5
-#define NOT 6
+#define XOR 6
+#define NOT 7
 //sll, slt, srl, sra...
-#define SLR 7
+#define SLR 8
+#define SRA 9
 //
 //主存
 unsigned int memory[MAX]={0};

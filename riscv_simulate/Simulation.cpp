@@ -181,9 +181,112 @@ void ID()
 			RegWrite=1;
 		}
 		//mulh rd, rs1, rs2
-		else if()
+		else if(fuc3 == F3_MULH && fuc7 == F7_MULH)
 		{
-			
+			EXTop=0;
+			RegDst=1;
+			ALUop= MUL;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
+		}
+		//slt rd, rs1, rs2
+		else if(fuc3 == F3_SLT && fuc7 == F7_SLT)
+		{
+			EXTop=0;
+			RegDst=1;
+			ALUop= SUB;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
+		}
+		//xor rd, rs1, rs2
+		else if(fuc3 == F3_XOR && fuc7 == F7_XOR)
+		{
+			EXTop=0;
+			RegDst=1;
+			ALUop= XOR;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
+		}
+		//div rd, rs1, rs2
+		else if(fuc3 == F3_DIV && fuc7 == F7_DIV)
+		{
+			EXTop=0;
+			RegDst=1;
+			ALUop= DIV;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
+		}
+		//srl rd, rs1, rs2
+		else if(fuc3 == F3_SRL && fuc7 == F7_SRL)
+		{
+			EXTop=0;
+			RegDst=1;
+			ALUop= SRL;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
+		}
+		//sra rd, rs1, rs2
+		else if(fuc3 == F3_SRA && fuc7 == F7_SRA)
+		{
+			EXTop=0;
+			RegDst=1;
+			ALUop= SRA;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
+		}
+		//or rd, rs1, rs2
+		else if(fuc3 == F3_OR && fuc7 == F7_OR)
+		{
+			EXTop=0;
+			RegDst=1;
+			ALUop= OR;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
+		}
+		//rem rd, rs1, rs2
+		else if(fuc3 == F3_OR && fuc7 == F7_OR)
+		{
+			EXTop=0;
+			RegDst=1;
+			ALUop= OR;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
+		}
+		//and rd, rs1, rs2
+		else 
+		{
+			EXTop=0;
+			RegDst=1;
+			ALUop= AND;
+			ALUSrc=0;
+			Branch=0;
+			MemRead=0;
+			MemWrite=0;
+			RegWrite=1;
 		}
 	}
     else if(OP==OP_I)

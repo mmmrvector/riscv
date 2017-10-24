@@ -169,7 +169,7 @@ void ID()
 			RegWrite=1;	
 		}
 		//sll rd, rs1, rs2
-		else if(fuc == F3_SLL && fuc7 == F7_SLL)
+		else if(fuc3 == F3_SLL && fuc7 == F7_SLL)
 		{
 			EXTop=0;
 			RegDst=1;
@@ -233,7 +233,7 @@ void ID()
 		{
 			EXTop=0;
 			RegDst=1;
-			ALUop= SRL;
+			ALUop= SRA;
 			ALUSrc=0;
 			Branch=0;
 			MemRead=0;

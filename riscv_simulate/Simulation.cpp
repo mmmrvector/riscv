@@ -76,16 +76,20 @@ void simulate()
 	{
 		//运行
 		IF();
+		IF_ID=IF_ID_old;
 		ID();
+		ID_EX=ID_EX_old;
 		EX();
+		EX_MEM=EX_MEM_old;
 		MEM();
+		MEM_WB=MEM_WB_old;
 		WB();
 
 		//更新中间寄存器
-		IF_ID=IF_ID_old;
-		ID_EX=ID_EX_old;
-		EX_MEM=EX_MEM_old;
-		MEM_WB=MEM_WB_old;
+		
+		
+		
+		
 
         if(exit_flag==1)
             break;
@@ -169,7 +173,7 @@ void ID()
 			RegWrite=1;	
 		}
 		//sll rd, rs1, rs2
-		else if(fuc == F3_SLL && fuc7 == F7_SLL)
+		else if(fuc3 == F3_SLL && fuc7 == F7_SLL)
 		{
 			EXTop=0;
 			RegDst=1;
@@ -233,7 +237,7 @@ void ID()
 		{
 			EXTop=0;
 			RegDst=1;
-			ALUop= SRL;
+			ALUop= SRA;
 			ALUSrc=0;
 			Branch=0;
 			MemRead=0;
@@ -345,11 +349,23 @@ void ID()
 	//write ID_EX_old
 	ID_EX_old.Rd=rd;
 	ID_EX_old.Rt=rt;
+	ID_EX_old.PC = PC;
 	ID_EX_old.Imm=ext_signed(EXTsrc,EXTop);
+	ID_EX_old.Reg_Rs = reg[rs];
+	ID_EX_old.Reg_Rt = reg[rt];
 	//...
 
 	ID_EX_old.Ctrl_EX_ALUOp=ALUop;
-	//....
+	ID_EX_old.Ctrl_EX_RegDst = RegDst;
+	ID_EX_old.Ctrl_EX_ALUSrc = ALUSrc;
+
+	ID_EX_old.Ctrl_M_Branch =  Branch;
+	ID_EX_old.Ctrl_M_MemWrite = MemWrite;
+	ID_EX_old.Ctrl_M_MemRead = MemRead;
+
+	ID_EX_old.Ctrl_WB_RegWrite = RegWrite;
+	ID_EX_old.Ctrl_WB_MemtoReg = MemtoReg;
+	
 
 }
 
@@ -357,12 +373,24 @@ void ID()
 void EX()
 {
 	//read ID_EX
+	int rd = ID_EX.Rd;
+	int rt =  ID_EX.Rt;
 	int temp_PC=ID_EX.PC;
+	int branch_PC = ID_EX.PC;
 	char RegDst=ID_EX.Ctrl_EX_RegDst;
 	char ALUOp=ID_EX.Ctrl_EX_ALUOp;
+	char Branch = ID_EX.Ctrl_M_Branch;
+	REG Reg_Rt = ID_EX.Reg_Rt;
+	REG Reg_Rs = ID_EX.Reg_Rs;
 
 	//Branch PC calulate
-	//...
+	if(Branch == 1)
+	{
+		if()
+		//R[rd] = PC + 4
+		reg[rd] = temp_PC
+		//PC = R[rs1] + {imm, 1}
+	}
 
 	//choose ALU input number
 	//...
@@ -388,19 +416,39 @@ void EX()
 	//write EX_MEM_old
 	EX_MEM_old.ALU_out=ALUout;
 	EX_MEM_old.PC=temp_PC;
-    //.....
+	EX_MEM_old.Zero = Zero;
+	EX_MEM_old.Reg_Dst = Reg_Dst;
+
+	EX_MEM_old.Ctrl_M_Branch = ID_EX.Branch;
+	EX_MEM_old.Ctrl_M_MemWrite = ID_EX.MemWrite;
+	EX_MEM_old.Ctrl_M_MemRead = ID_EX.MemRead;
+
+	EX_MEM_old.Ctrl_WB_RegWrite = ID_EX.RegWrite;
+	EX_MEM_old.Ctrl_WB_MemtoReg = ID_EX.MemtoReg;
+    
 }
 
 //访问存储器
 void MEM()
 {
 	//read EX_MEM
+	unsigned int Mem_read = EX_MEM.Mem_read;
+	REG ALU_out = EX_MEM.ALUout;
+	int Reg_dst = EX_MEM.Reg_dst;
+	char MemWrite = EX_MEM.MemWrite;
+	char MemRead = EX_MEM.MemRead;
+
 
 	//complete Branch instruction PC change
 
 	//read / write memory
 
 	//write MEM_WB_old
+	MEM_WB_old.ALUout = ALU_out;
+	MEM_WB_old.Reg_dst = Reg_dst;
+	MEM_WB_old.Mem_read = Mem_read;
+	MEM_WB_old.Ctrl_WB_RegWrite = EX_MEM.Ctrl_WB_RegWrite;
+	MEM_WB_old.Ctrl_WB_MemtoReg = EX_MEM.Ctrl_WB_MemtoReg;
 }
 
 
@@ -408,6 +456,10 @@ void MEM()
 void WB()
 {
 	//read MEM_WB
+	REG ALUout = MEM_WB.ALUout;
+	int Reg_dst = Reg_dst;
+	char RegWrite = MEM_WB.Ctrl_WB_RegWrite;
+	char MemtoReg = MEM_WB.Ctrl_WB_MemtoReg;
 
 	//write reg
 }

@@ -113,8 +113,6 @@ void MEM();
 void WB();
 
 
-//符号扩展
-int ext_signed(unsigned int src,int bit);
 
 //获取指定位
 //unsigned int getbit(int s,int e);
@@ -130,8 +128,14 @@ unsigned int getbit(unsigned inst,int s,int e)
 	return temp_inst;
 }
 
-int ext_signed(unsigned int src,int bit)
+//
+unsigned long long int ext_signed(unsigned int src,int bit)
 {
+	unsigned long long int temp;
+	if(src & (0x1 << (bit - 1)) ！= 0)
+		temp = 0xffffffff00000000 | src;
+	else 
+		temp = 0x0 | src;
     return 0;
 }
 

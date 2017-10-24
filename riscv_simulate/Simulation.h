@@ -1,4 +1,4 @@
-//#include<iostream>
+#include<iostream>
 #include<stdio.h>
 #include<math.h>
 //#include <io.h>
@@ -63,7 +63,7 @@
 #define F3_SCALL 0
 #define F7_SCALL 0
 
-#define MAX 100000000
+#define MAX 400000000
 //ALUop
 #define ADD 0
 #define SUB 1
@@ -78,7 +78,7 @@
 #define SRA 9
 //
 //主存
-unsigned int memory[MAX]={0};
+unsigned char memory[MAX]={0};
 //寄存器堆
 REG reg[32]={0};
 //PC
@@ -113,7 +113,7 @@ void MEM();
 void WB();
 
 
-
+void Run();
 //获取指定位
 //unsigned int getbit(int s,int e);
 
@@ -132,10 +132,16 @@ unsigned int getbit(unsigned inst,int s,int e)
 unsigned long long int ext_signed(unsigned int src,int bit)
 {
 	unsigned long long int temp;
-	if(src & (0x1 << (bit - 1)) ！= 0)
-		temp = 0xffffffff00000000 | src;
+	
+	if((src & (0x1 << (bit - 1))) != 0)
+	{
+		//printf("src = %d\n", src);
+		temp = -1 << (bit - 1);
+		temp = temp | src;
+		//printf("in ext = %016llx\n", temp);
+	}
 	else 
 		temp = 0x0 | src;
-    return 0;
+    return temp;
 }
 

@@ -12,7 +12,7 @@ unsigned int pnum=0;
 unsigned int sadr=0;
 unsigned int ssize=0;
 unsigned int snum=0;
-
+unsigned int shstrndx = 0;
 //Symbol table
 unsigned int symnum=0;
 unsigned int symadr=0;
@@ -114,11 +114,14 @@ void read_Elf_header()
 	sadr = elf64_hdr.e_shoff;
 	ssize = elf64_hdr.e_shentsize;
 	snum = elf64_hdr.e_shnum;
+	shstrndx = elf64_hdr.e_shstrndx;
 	printf("sadr = %d\n", sadr);
 	//program headers
 	padr = elf64_hdr.e_phoff;
 	psize = elf64_hdr.e_phentsize;
 	pnum = elf64_hdr.e_phnum;
+	//section header string table
+	 
 	
 }
 
@@ -126,6 +129,18 @@ void read_elf_sections()
 {
 
 	Elf64_Shdr elf64_shdr;
+	char sectionstr[1000];
+	fseek(file, sadr, SEEK_SET);
+	for(int c = 0;c<snum; c++)
+	{
+		fread(&elf64_shdr,1,sizeof(elf64_shdr),file);
+		if(c == shstrndx)
+		{
+			fseek(file, elf64_shdr.sh_offset,SEEK_SET);
+			fread(sectionstr, 1, elf64_shdr.sh_size, file);	
+			break;
+		}
+	}
 	fseek(file, sadr, SEEK_SET);
 	for(int c=0;c<snum;c++)
 	{
@@ -134,7 +149,7 @@ void read_elf_sections()
 		//file should be relocated
 		fread(&elf64_shdr,1,sizeof(elf64_shdr),file);
 
-		fprintf(elf," Name: %d ", elf64_shdr.sh_name);
+		fprintf(elf," Name: %s ", sectionstr + elf64_shdr.sh_name);
 
 		fprintf(elf," Type: %d ", elf64_shdr.sh_type);
 
@@ -153,7 +168,7 @@ void read_elf_sections()
 		fprintf(elf," Info:  %d ", elf64_shdr.sh_info);
 
 		fprintf(elf," Align: %lld \n", elf64_shdr.sh_addralign);
-		if(c == snum - 3)
+		if(strcmp(sectionstr+elf64_shdr.sh_name, ".symtab") == 0)
 		{
 			symsize = elf64_shdr.sh_size;
 			symnum = elf64_shdr.sh_entsize;
@@ -161,7 +176,7 @@ void read_elf_sections()
 			
 			symadr = elf64_shdr.sh_addr + elf64_shdr.sh_offset;
 		}
-		if(c == snum - 2)
+		if(strcmp(sectionstr+elf64_shdr.sh_name, ".strtab") == 0)
 		{
 			stradr = elf64_shdr.sh_addr + elf64_shdr.sh_offset;	
 			strsize = elf64_shdr.sh_size;
@@ -196,6 +211,22 @@ void read_Phdr()
 		fprintf(elf," MemSiz:   0x%016llx ", elf64_phdr.p_memsz);
 		
 		fprintf(elf," Align:   0x%x \n", elf64_phdr.p_align);
+		if(c == 0)
+		{
+			cadr = elf64_phdr.p_offset;
+			vadr = elf64_phdr.p_vaddr;
+			printf("code segment addres:cadr = %08x\n", cadr);
+			printf("virtual code segment addres:vadr = %08x\n", vadr);
+			csize = elf64_phdr.p_filesz;
+		}
+		if(c == 1)
+		{
+			dadr = elf64_phdr.p_offset;
+			vdadr = elf64_phdr.p_vaddr;
+			printf("data segment addres:cadr = %08x\n", dadr);
+			printf("virtual data segment addres:vdadr = %08x\n", vdadr);	
+			dsize = elf64_phdr.p_filesz;
+		}
 	}
 }
 
@@ -225,15 +256,18 @@ void read_symtable()
 		
 		fprintf(elf," Size:  %lld ", elf64_sym.st_size);
 		if(strcmp(str+elf64_sym.st_name, "main") == 0)
-		//if(str[elf64_sym.st_name] == 'm' && str[elf64_sym.st_name + 1] =='a' && str[elf64_sym.st_name + 2] == 'i' && str[elf64_sym.st_name + 3] == 'n')
 		{
-			csize = elf64_sym.st_size;
+			endPC =  elf64_sym.st_value + elf64_sym.st_size;
 		}
 		fprintf(elf," Value:   %016llx\n", elf64_sym.st_value);
 		if(strcmp(str+elf64_sym.st_name, "main") == 0)		
-		//if(str[elf64_sym.st_name] == 'm' && str[elf64_sym.st_name + 1] =='a' && str[elf64_sym.st_name + 2] == 'i' && str[elf64_sym.st_name + 3] == 'n')
 		{
-			cadr = elf64_sym.st_value;			
+			entry = elf64_sym.st_value;
+			madr = entry;			
+		}
+		if(strcmp(str+elf64_sym.st_name, "__global_pointer$") == 0)
+		{
+		        gp = elf64_sym.st_value;	
 		}
 
 	}

@@ -32,25 +32,25 @@ void load_memory()
 	
 	fseek(file,cadr,SEEK_SET);
 	
-	fread(&memory[vadr>>2],1,csize,file);
+	fread(&memory[vadr],1,csize,file);
 	
 	fseek(file, dadr, SEEK_SET);
-	fread(&memory[vdadr>>2], 1,dsize, file);
+	fread(&memory[vdadr], 1,dsize, file);
 	printf("entry = %08x\n", entry);
 	printf("endPC = %08x\n",endPC);
-	vadr=vadr>>2;
-	vdadr = vdadr>>2;
+	//vadr=vadr>>2;
+	//vdadr = vdadr>>2;
 	//only function main in memory
 	//entry = entry >>2;
 	
 	//endPC = endPC>>2;	
 	//havn't load .data yet
 	printf("gp = %08x\n", gp);
-	gp = gp >> 2;
+	//gp = gp >> 2;
 	printf("gp = %08x\n", gp);
 	//here csize represents the number of instructions
-	csize=csize>>2;
-	dsize=dsize>>2;
+	//csize=csize>>2;
+	//dsize=dsize>>2;
 
 	
 	fclose(file);
@@ -65,13 +65,13 @@ int main()
 	load_memory();
 	
 	//设置入口地址
-	PC=entry>>2;
-	
+	//PC=entry>>2;
+	PC = entry;
 	//设置全局数据段地址寄存器
 	reg[3]=gp;
 	
 	reg[2]=MAX/2;//栈基址 （sp寄存器）
-	printf("end = %08x\n", endPC/4-1);
+	printf("end = %08x\n", endPC-1);
 	
 	simulate();
 
@@ -83,9 +83,9 @@ int main()
 void simulate()
 {
 	//结束PC的设置
-	int end=(int)endPC/4-1;
+	int end=(int)endPC-3;
 	int cnt = 0;
-	while(PC!=end && cnt <500 )
+	while(PC!=end )
 	{
 		printf("no.%d\n", cnt);
 		Run();
@@ -96,7 +96,8 @@ void simulate()
 		
 		for(int i = 0; i < 10; i ++)
 		{
-			printf("%d ", memory[17904 + i]);	
+			printf("%d ", memory[71616 + i*4]);
+				
 		}
 	printf("\n");
 
@@ -106,17 +107,17 @@ void simulate()
         reg[0]=0;//一直为零
 
 	}
-	printf("b = %d\n", memory[17880]);
+	//printf("b = %d\n", memory[17880]);
 }
 
 void Run()
 {
 	//read instruction
-	unsigned int inst = memory[PC];
+	unsigned int inst = memory[PC] +(memory[PC + 1] << 8) + (memory[PC + 2] << 16)+(memory[PC + 3] << 24);
 	
 	printf("PC = 0x%08x  ",PC);
 	printf("inst = 0x%08x ",inst); 
-	PC = PC + 1;
+	PC = PC + 4;
 	OP = getbit(inst, 0, 6);
 	rd=getbit(inst,7,11);
 	fuc3=getbit(inst,12, 14);
@@ -132,7 +133,11 @@ void Run()
 		//add rd, rs1, rs2
 		if(fuc3==F3_ADD&&fuc7==F7_ADD)
 		{
+			//printf("rs = %lld, rt = %lld, rd = %lld rs+rt = %lld ", reg[rs], reg[rt], reg[rd], reg[rs] + reg[rt]);
             		reg[rd] = reg[rs] + reg[rt];
+			//printf("PC = 0x%08x, inst = 0x%08x ", PC, inst);
+			printf("add ");
+			
 		}
 		//mul rd, rs1, rs2
 		else if(fuc3 ==F3_MUL &&fuc7==F7_MUL)
@@ -157,7 +162,9 @@ void Run()
 		//slt rd, rs1, rs2
 		else if(fuc3 == F3_SLT && fuc7 == F7_SLT)
 		{
-			if(reg[rs] < reg[rt])
+			long long reg_rs = reg[rs];
+			long long reg_rt = reg[rt];
+			if(reg_rs < reg_rt)
 				reg[rd] = 1;
 			else
 				reg[rd] = 0;
@@ -188,7 +195,7 @@ void Run()
 			reg[rd] = reg[rs] | reg[rt];
 		}
 		//rem rd, rs1, rs2
-		else if(fuc3 == F3_OR && fuc7 == F7_OR)
+		else if(fuc3 == F3_REM && fuc7 == F7_REM)
 		{
 			reg[rd] = reg[rs] % reg[rt];
 		}
@@ -199,11 +206,20 @@ void Run()
 		}
 		printf("rd = %lld, rs = %lld, rt = %lld\n", reg[rd], reg[rs], reg[rt]);
 	}
+	
 	else if(OP == 59)
 	{
+		//ADDW
 		if(fuc3 == 0 && fuc7 == 0)
 		{
-			reg[rd] = reg[rs] + reg[rt];
+			reg[rd] = (long long)reg[rs] + (long long)reg[rt];
+			printf("addw ");
+		}
+		//subw
+		else if(fuc3 == 0 & fuc7 == 32)
+		{
+			reg[rd] = reg[rs] - reg[rt];
+			printf("subw ");
 		}
 		printf("rd = %lld, rs = %lld, rt = %lld\n ", reg[rd], reg[rs], reg[rt]);
 	}
@@ -216,12 +232,13 @@ void Run()
         if(fuc3==F3_ADDI)
         {
             		reg[rd] = reg[rs] + imm;
-
+			printf("addi ");
         }
         //slli rd, rs1, imm
         else if(fuc3 == 1 && fuc7 == 0)
         {
             reg[rd] = reg[rs] << imm;
+		printf("slli ");
         }
         //slti rd, rs, imm
         else if(fuc3 == 2)
@@ -230,6 +247,7 @@ void Run()
         		reg[rd] = 1;
         	else 
         		reg[rd] = 0;
+		printf("slti ");
         }
         //xori rd, rs, imm
         else if(fuc3 == 4)
@@ -256,7 +274,7 @@ void Run()
         {
         	reg[rd] = reg[rs] & imm;
         }
-	printf("rd = %lld, rs = %lld, imm = %d\n", reg[rd], reg[rt], imm);
+	printf("rd = %lld, rs = %lld, imm = %d\n", reg[rd], reg[rs], imm);
     }
     else if(OP==OP_SW)
     {
@@ -266,23 +284,41 @@ void Run()
     	//sb rt, offset(rs)
         if(fuc3==F3_SB)
         {
-           memory[reg[rs] + imm >> 2] = reg[rt] & 0xff;
+           memory[reg[rs] + imm] = reg[rt] & 0xff;
         }
         //sh rt, offset(rs)
         else if(fuc3 == 1)
         {
-           memory[reg[rs] + imm >> 2] = reg[rt] & 0xffff;
+           memory[reg[rs] + imm] = reg[rt] & 0xff;
+		memory[reg[rs] + imm + 1] = (reg[rt] & 0xff00) >> 8;
         }
         //sw rt, offset(rs)
         else if(fuc3 == 2)
         {
-        	memory[reg[rs] + imm >> 2] = reg[rt] & 0xffffffff;
+		//memcpy(memory + reg[rs] + imm, reg + rt, 4);
+		
+        	memory[reg[rs] + imm] = reg[rt] & 0xff;
+		memory[reg[rs] + imm + 1] = (reg[rt] & 0xff00) >> 8;
+		memory[reg[rs] + imm + 2] = (reg[rt] & 0xff0000) >> 16;
+		memory[reg[rs] + imm + 3] = (reg[rt] & 0xff000000) >> 24;
+		
+		printf("sw %02x%02x%02x%02x  rt = %d ", memory[reg[rs] + imm+3], memory[reg[rs] + imm+2],memory[reg[rs] + imm+1],memory[reg[rs] + imm],reg[rt]);
         }
         //sd rt, offset(rs)
         else
         {
-        	memory[reg[rs] + imm >> 2] = reg[rt] & 0xffffffff00000000;
-        	memory[((reg[rs] + imm)>> 2) + 1] = reg[rt] & 0xffffffff;
+		//memcpy(memory + reg[rs] + imm, reg + rt, 8);
+		
+        	memory[reg[rs] + imm] = reg[rt] & 0xff;
+		memory[reg[rs] + imm + 1] = (reg[rt] & 0xff00) >> 8;
+		memory[reg[rs] + imm + 2] = (reg[rt] & 0xff0000) >> 16;
+		memory[reg[rs] + imm + 3] = (reg[rt] & 0xff000000) >> 24;
+		memory[reg[rs] + imm + 4] = (reg[rt] & 0xff00000000) >> 32;
+		memory[reg[rs] + imm + 5] = (reg[rt] & 0xff0000000000) >> 40;
+		memory[reg[rs] + imm + 6] = (reg[rt] & 0xff000000000000) >> 48;
+		memory[reg[rs] + imm + 7] = (reg[rt] & 0xff00000000000000) >> 56;
+		
+		printf("sd %02x%02x%02x%02x , rt = %08x ", memory[reg[rs] + imm + 3],memory[reg[rs] + imm + 2],memory[reg[rs] + imm + 1],memory[reg[rs] + imm], reg[rt]);
         }
 	printf("rs = %lld, rt = %lld, imm = %d\n", reg[rs], reg[rt], imm);
     }
@@ -293,22 +329,49 @@ void Run()
     	//lb rd, offset(rs)
         if(fuc3==F3_LB)
         {
-			reg[rd] = ext_signed(memory[reg[rs] + imm >> 2], 8);
+		unsigned int temp;
+		temp = memory[reg[rs] + imm] & 0x000000ff;
+		reg[rd] = ext_signed(temp, 8);
         }
         //lh rd, offset(rs)
         else if(fuc3 == 1)
         {
-        	reg[rd] = ext_signed(memory[reg[rs] + imm >> 2], 16);
+		unsigned int temp;
+		temp = (memory[reg[rs] + imm] & 0x000000ff) + ((memory[reg[rs] + imm + 1] & 0x000000ff) << 8);
+		
+        	reg[rd] = ext_signed(temp, 16);
         }
         //lw rd, offset(rs)
         else if(fuc3 == 2)
         {
-        	reg[rd] = ext_signed(memory[reg[rs] + imm >> 2], 32);
+		//memcpy(reg + rd, memory + reg[rs] + imm, 4);
+		//memset(reg + rd + 4, 0, 4);
+		
+		unsigned int temp;
+		unsigned int t1 = memory[reg[rs] + imm];
+		unsigned int t2 = memory[reg[rs] + imm + 1];
+		unsigned int t3 = memory[reg[rs] + imm + 2];
+		unsigned int t4 = memory[reg[rs] + imm + 3];
+		//temp = (memory[reg[rs] + imm] & 0x000000ff) + ((memory[reg[rs] + imm + 1] &0x000000ff)<< 8) + ((memory[reg[rs] + imm + 2] &0x000000ff)<< 16) + ((memory[reg[rs] + imm + 3] &0x000000ff)<< 24);
+		temp = t1 + (t2 << 8) + (t3 << 16) + (t4 << 24);
+		
+        	reg[rd] = ext_signed(temp, 32);
+		
+		
+		printf("lw ");
         }
         //ld rd, offset(rs)
         else
         {
-        	reg[rd] = ((long long int)memory[reg[rs] + imm >> 2] << 32) + (long long int)memory[(reg[rs] + imm  >> 2) + 1];
+		//memcpy(reg + rd, memory + reg[rs] + imm, 8);
+		
+        	unsigned long long int low;
+		unsigned long long int high;
+		low = (memory[reg[rs] + imm] & 0x00000000000000ff) + (memory[reg[rs] + imm + 1] << 8) + (memory[reg[rs] + imm + 2] << 16) + (memory[reg[rs] + imm + 3] << 24);
+		high = (memory[reg[rs] + imm + 4] & 0x00000000000000ff) + (memory[reg[rs] + imm + 5] << 8) + (memory[reg[rs] + imm + 6] << 16) + (memory[reg[rs] + imm + 7] << 24);
+		reg[rd] = (high << 32) |low;
+		
+		printf("ld ");
         }
 	printf("rd = %lld, rs = %lld, imm = %d\n", reg[rd], reg[rs], imm); 
     }
@@ -320,40 +383,51 @@ void Run()
     	//beq rs, rt, imm
         if(fuc3==F3_BEQ)
         {
-        	PC = PC - 1;
+        	PC = PC - 4;
 			if(reg[rs] == reg[rt])
-				PC = PC + (imm >> 2);
+				PC = PC + imm ;
 			else
-				PC = PC + 1;
+				PC = PC + 4;
+		printf("beq ");
         }
         //bne rs, rt, imm
         else if(fuc3 == 1)
         {
-        	PC = PC - 1;
+        	PC = PC - 4;
         	if(reg[rs] != reg[rt])
-				PC = PC + (imm >> 2);
+				PC = PC + imm;
 			else
-				PC = PC + 1;
+				PC = PC + 4;
+		printf("bne ");
         }
         //blt rs, rt, imm
         else if(fuc3 == 4)
         {
-        	PC = PC - 1;
-        	if(reg[rs] < reg[rt])
-				PC = PC + (imm >> 2);
+        	PC = PC - 4;
+		long long int reg_rs = reg[rs];	
+		long long int reg_rt = reg[rt];
+        	if(reg_rs < reg_rt)
+		{
+				printf(" rs < rt ");
+				PC = PC + imm;
+		}
 			else
-				PC = PC + 1;
+				PC = PC + 4;
+		printf("blt ");
         }
         //bge rs, rt, imm
         else
         {
-        	PC = PC - 1;
-        	if(reg[rs] >= reg[rt])
-				PC = PC + (imm >> 2);
+        	PC = PC - 4;
+		long long int reg_rs = reg[rs];	
+		long long int reg_rt = reg[rt];
+        	if(reg_rs >= reg_rt)
+				PC = PC + imm;
 			else
-				PC = PC + 1;
+				PC = PC + 4;
+		printf("bge ");
         }
-	printf("rs = %lld, rt = %lld, next PC = %08x\n", reg[rs], reg[rt], PC);
+	printf("rs = %lld, rt = %lld, next PC = %08x PC + imm = %d \n", reg[rs], reg[rt], PC, imm);
     }
     //jalr rd, rs, imm
     else if(OP==103)
@@ -361,9 +435,11 @@ void Run()
     	//imm = ...
     	imm = ext_signed(getbit(inst, 20, 31), 12);
 	
-    	PC = PC - 1;
-        reg[rd] = PC + 1;
-        PC = reg[rs] + (imm  >> 2);
+    	PC = PC - 4;
+	unsigned int oldPC= PC;
+	PC = reg[rs] + imm;
+        reg[rd] = oldPC + 4;
+        
 	printf("jalr PC = %08x,  imm = %d\n", PC, imm);
     }
     //addiw rd, rs, imm
@@ -372,19 +448,23 @@ void Run()
     	//imm = ...
     	imm = getbit(inst, 20, 31);
 	imm = ext_signed(imm, 12);
+	printf(" addiw rs = %lld , imm = %d ", reg[rs], imm);
+	//printf(" ext_signed(imm, 32) = %lld ", ext_signed(imm,32));
+	//printf( "rd = ext(ext(imm,32)+rs = %lld ", ext_signed(reg[rs] + ext_signed(imm, 32),32));
+	
 		reg[rd] = ext_signed(reg[rs] + ext_signed(imm, 32),32);
-	printf("rd = %lld, rs = %lld, rt = %lld\n", reg[rd], reg[rs], reg[rt]);
+	printf(" rd = %lld, rs = %lld, imm = %d\n", reg[rd], reg[rs], imm);
     }
     //auipc rd, imm
     else if(OP == 23)
     {
-    	//imm = ...
+    	//imm = ... 
     	imm = getbit(inst, 12, 31);
 	imm = ext_signed(imm, 20);
-    	PC = PC - 1;
+    	PC = PC - 4;
     	reg[rd] = PC + (imm << 12);
-	PC = PC + 1;
-	printf("auipc PC = %08x, imm = %d\n", PC, imm);
+	PC = PC + 4;
+	printf("auipc PC = %08x, imm = %d\n", reg[rd], imm);
     }
     //lui rd, imm
     else if (OP == 55)
@@ -401,9 +481,9 @@ void Run()
     	//imm = ...
     	imm = 0 + (getbit(inst, 21, 30) << 1) + (getbit(inst, 20, 20) << 11) + (getbit(inst, 12, 19) << 12) + (getbit(inst, 31, 31) <<20);
 	imm = ext_signed(imm, 20);
-    	PC = PC - 1;
-    	reg[rd] = PC + 1;
-    	PC = PC + (imm >> 2 );
+    	PC = PC - 4;
+    	reg[rd] = PC + 4;
+    	PC = PC + imm ;
 	printf("jal PC = %08x, imm = %d\n", PC, imm);
     }
     else

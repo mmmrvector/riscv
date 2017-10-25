@@ -6,6 +6,7 @@
 #include<time.h>
 #include<stdlib.h>
 #include"Reg_def.h"
+#include <string.h>
 
 #define OP_JAL 111
 #define OP_R 51
@@ -129,14 +130,15 @@ unsigned int getbit(unsigned inst,int s,int e)
 }
 
 //
-unsigned long long int ext_signed(unsigned int src,int bit)
+unsigned long long int ext_signed(unsigned int src1,int bit)
 {
 	unsigned long long int temp;
-	
+	unsigned int src = src1;
 	if((src & (0x1 << (bit - 1))) != 0)
 	{
 		//printf("src = %d\n", src);
-		temp = -1 << (bit - 1);
+		unsigned long long m1 = -1;
+		temp = m1 << bit;
 		temp = temp | src;
 		//printf("in ext = %016llx\n", temp);
 	}

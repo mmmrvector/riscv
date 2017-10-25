@@ -1,0 +1,172 @@
+ELF Header:
+ magic number:  7f454c46020101000000000000000000 Class:  ELFCLASS32
+ Data:  little-endian
+ Version:   
+ OS/ABI:	 System V ABI
+ ABI Version:   
+ Type:  2
+ Machine:   EXEC (Executable file)
+ Version:  RISC-V
+ Entry point address:  0x100b0
+ Start of program headers:   64 bytes into  file
+ Start of section headers:   9400 bytes into  file
+ Flags:  0x5, RVC, double-float ABI
+ Size of this header:   64 Bytes
+ Size of program headers: 56 Bytes
+ Number of program headers:  2 
+ Size of section headers:   64 Bytes
+ Number of section headers: 13 
+ Section header string table index:  12 
+
+
+Section Headers:
+ [  0]
+ Name:   Type: 0  Address: 0000000000000000  Offest: 00000000 
+ Size: 0000000000000000  Entsize: 0000000000000000  Flags:  0  Link:  0  Info:  0  Align: 0 
+ [  1]
+ Name: .text  Type: 1  Address: 00000000000100b0  Offest: 000000b0 
+ Size: 000000000000083e  Entsize: 0000000000000000  Flags:  6  Link:  0  Info:  0  Align: 4 
+ [  2]
+ Name: .eh_frame  Type: 1  Address: 00000000000108f0  Offest: 000008f0 
+ Size: 000000000000005c  Entsize: 0000000000000000  Flags:  2  Link:  0  Info:  0  Align: 8 
+ [  3]
+ Name: .init_array  Type: 14  Address: 0000000000011000  Offest: 00001000 
+ Size: 0000000000000008  Entsize: 0000000000000008  Flags:  3  Link:  0  Info:  0  Align: 8 
+ [  4]
+ Name: .fini_array  Type: 15  Address: 0000000000011008  Offest: 00001008 
+ Size: 0000000000000008  Entsize: 0000000000000008  Flags:  3  Link:  0  Info:  0  Align: 8 
+ [  5]
+ Name: .data  Type: 1  Address: 0000000000011010  Offest: 00001010 
+ Size: 0000000000000748  Entsize: 0000000000000000  Flags:  3  Link:  0  Info:  0  Align: 8 
+ [  6]
+ Name: .sdata  Type: 1  Address: 0000000000011758  Offest: 00001758 
+ Size: 0000000000000020  Entsize: 0000000000000000  Flags:  3  Link:  0  Info:  0  Align: 8 
+ [  7]
+ Name: .sbss  Type: 8  Address: 0000000000011778  Offest: 00001778 
+ Size: 0000000000000010  Entsize: 0000000000000000  Flags:  3  Link:  0  Info:  0  Align: 8 
+ [  8]
+ Name: .bss  Type: 8  Address: 0000000000011788  Offest: 00001778 
+ Size: 0000000000000048  Entsize: 0000000000000000  Flags:  3  Link:  0  Info:  0  Align: 8 
+ [  9]
+ Name: .comment  Type: 1  Address: 0000000000000000  Offest: 00001778 
+ Size: 000000000000001a  Entsize: 0000000000000001  Flags:  48  Link:  0  Info:  0  Align: 1 
+ [ 10]
+ Name: .symtab  Type: 2  Address: 0000000000000000  Offest: 00001798 
+ Size: 0000000000000960  Entsize: 0000000000000018  Flags:  0  Link:  11  Info:  44  Align: 8 
+ [ 11]
+ Name: .strtab  Type: 3  Address: 0000000000000000  Offest: 000020f8 
+ Size: 000000000000035c  Entsize: 0000000000000000  Flags:  0  Link:  0  Info:  0  Align: 1 
+ [ 12]
+ Name: .shstrtab  Type: 3  Address: 0000000000000000  Offest: 00002454 
+ Size: 0000000000000064  Entsize: 0000000000000000  Flags:  0  Link:  0  Info:  0  Align: 1 
+
+
+Program Headers:
+ [  0]
+ Type:   1  Flags:  5  Offset:  0x0000000000000000  VirtAddr:  0x0000000000010000  PhysAddr:   0x0000000000010000  FileSiz:   0x000000000000094c  MemSiz:   0x000000000000094c  Align:   0x1000 
+ [  1]
+ Type:   1  Flags:  6  Offset:  0x0000000000001000  VirtAddr:  0x0000000000011000  PhysAddr:   0x0000000000011000  FileSiz:   0x0000000000000778  MemSiz:   0x00000000000007d0  Align:   0x1000 
+
+
+Symbol table:
+ [  0]    Name:                                            Bind:    Type:    NDX:   0  Size:  0  Value:   0000000000000000
+ [  1]    Name:                                            Bind:    Type:    NDX:   1  Size:  0  Value:   00000000000100b0
+ [  2]    Name:                                            Bind:    Type:    NDX:   2  Size:  0  Value:   00000000000108f0
+ [  3]    Name:                                            Bind:    Type:    NDX:   3  Size:  0  Value:   0000000000011000
+ [  4]    Name:                                            Bind:    Type:    NDX:   4  Size:  0  Value:   0000000000011008
+ [  5]    Name:                                            Bind:    Type:    NDX:   5  Size:  0  Value:   0000000000011010
+ [  6]    Name:                                            Bind:    Type:    NDX:   6  Size:  0  Value:   0000000000011758
+ [  7]    Name:                                            Bind:    Type:    NDX:   7  Size:  0  Value:   0000000000011778
+ [  8]    Name:                                            Bind:    Type:    NDX:   8  Size:  0  Value:   0000000000011788
+ [  9]    Name:                                            Bind:    Type:    NDX:   9  Size:  0  Value:   0000000000000000
+ [ 10]    Name:                                crtstuff.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 11]    Name:                        __EH_FRAME_BEGIN__  Bind:    Type:    NDX:   2  Size:  0  Value:   00000000000108f0
+ [ 12]    Name:                      deregister_tm_clones  Bind:    Type:    NDX:   1  Size:  0  Value:   00000000000100f4
+ [ 13]    Name:                        register_tm_clones  Bind:    Type:    NDX:   1  Size:  0  Value:   0000000000010118
+ [ 14]    Name:                     __do_global_dtors_aux  Bind:    Type:    NDX:   1  Size:  0  Value:   0000000000010144
+ [ 15]    Name:                            completed.5184  Bind:    Type:    NDX:   8  Size:  1  Value:   0000000000011788
+ [ 16]    Name:    __do_global_dtors_aux_fini_array_entry  Bind:    Type:    NDX:   4  Size:  0  Value:   0000000000011008
+ [ 17]    Name:                               frame_dummy  Bind:    Type:    NDX:   1  Size:  0  Value:   000000000001017e
+ [ 18]    Name:                               object.5189  Bind:    Type:    NDX:   8  Size:  48  Value:   0000000000011790
+ [ 19]    Name:            __frame_dummy_init_array_entry  Bind:    Type:    NDX:   3  Size:  0  Value:   0000000000011000
+ [ 20]    Name:                                    aa.cpp  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 21]    Name:                                  atexit.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 22]    Name:                                    exit.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 23]    Name:                                    fini.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 24]    Name:                                  impure.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 25]    Name:                               impure_data  Bind:    Type:    NDX:   5  Size:  1864  Value:   0000000000011010
+ [ 26]    Name:                                    init.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 27]    Name:                                __atexit.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 28]    Name:                           __call_atexit.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 29]    Name:                                syscalls.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 30]    Name:                                 conv_stat  Bind:    Type:    NDX:   1  Size:  65  Value:   00000000000104e2
+ [ 31]    Name:                        __internal_syscall  Bind:    Type:    NDX:   1  Size:  27  Value:   0000000000010544
+ [ 32]    Name:                             heap_end.2611  Bind:    Type:    NDX:   7  Size:  8  Value:   0000000000011780
+ [ 33]    Name:                                   t0.2574  Bind:    Type:    NDX:   8  Size:  16  Value:   00000000000117c0
+ [ 34]    Name:                                   errno.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 35]    Name:                                crtstuff.c  Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 36]    Name:                             __FRAME_END__  Bind:    Type:    NDX:   2  Size:  0  Value:   0000000000010948
+ [ 37]    Name:                                            Bind:    Type:    NDX:   65521  Size:  0  Value:   0000000000000000
+ [ 38]    Name:                          __fini_array_end  Bind:    Type:    NDX:   4  Size:  0  Value:   0000000000011010
+ [ 39]    Name:                        __fini_array_start  Bind:    Type:    NDX:   4  Size:  0  Value:   0000000000011008
+ [ 40]    Name:                          __init_array_end  Bind:    Type:    NDX:   3  Size:  0  Value:   0000000000011008
+ [ 41]    Name:                       __preinit_array_end  Bind:    Type:    NDX:   3  Size:  0  Value:   0000000000011000
+ [ 42]    Name:                        __init_array_start  Bind:    Type:    NDX:   3  Size:  0  Value:   0000000000011000
+ [ 43]    Name:                     __preinit_array_start  Bind:    Type:    NDX:   3  Size:  0  Value:   0000000000011000
+ [ 44]    Name:                                  _Z3addii  Bind:    Type:    NDX:   1  Size:  63  Value:   00000000000101a8
+ [ 45]    Name:                                   fstatat  Bind:    Type:    NDX:   1  Size:  57  Value:   0000000000010672
+ [ 46]    Name:                                   sysconf  Bind:    Type:    NDX:   1  Size:  19  Value:   000000000001085c
+ [ 47]    Name:                         __global_pointer$  Bind:    Type:    NDX:   6  Size:  0  Value:   0000000000011f58
+ [ 48]    Name:                                     utime  Bind:    Type:    NDX:   1  Size:  3  Value:   0000000000010848
+ [ 49]    Name:                                         b  Bind:    Type:    NDX:   6  Size:  4  Value:   0000000000011764
+ [ 50]    Name:                                 faccessat  Bind:    Type:    NDX:   1  Size:  31  Value:   00000000000106c8
+ [ 51]    Name:                                   __errno  Bind:    Type:    NDX:   1  Size:  5  Value:   00000000000108e6
+ [ 52]    Name:                                     times  Bind:    Type:    NDX:   1  Size:  97  Value:   00000000000107da
+ [ 53]    Name:                                    execve  Bind:    Type:    NDX:   1  Size:  23  Value:   0000000000010740
+ [ 54]    Name:                                    getpid  Bind:    Type:    NDX:   1  Size:  3  Value:   000000000001076c
+ [ 55]    Name:                               __TMC_END__  Bind:    Type:    NDX:   6  Size:  0  Value:   0000000000011758
+ [ 56]    Name:                                    isatty  Bind:    Type:    NDX:   1  Size:  29  Value:   000000000001079c
+ [ 57]    Name:                              __dso_handle  Bind:    Type:    NDX:   6  Size:  0  Value:   0000000000011758
+ [ 58]    Name:                                     lseek  Bind:    Type:    NDX:   1  Size:  19  Value:   000000000001059c
+ [ 59]    Name:                        _global_impure_ptr  Bind:    Type:    NDX:   6  Size:  8  Value:   0000000000011768
+ [ 60]    Name:                                     chown  Bind:    Type:    NDX:   1  Size:  3  Value:   000000000001084c
+ [ 61]    Name:                         __libc_init_array  Bind:    Type:    NDX:   1  Size:  101  Value:   00000000000102ba
+ [ 62]    Name:                                     chmod  Bind:    Type:    NDX:   1  Size:  3  Value:   0000000000010850
+ [ 63]    Name:                                     _init  Bind:    Type:    NDX:   1  Size:  2  Value:   00000000000100f2
+ [ 64]    Name:                         __libc_fini_array  Bind:    Type:    NDX:   1  Size:  75  Value:   000000000001026c
+ [ 65]    Name:                                     write  Bind:    Type:    NDX:   1  Size:  19  Value:   00000000000105c0
+ [ 66]    Name:                                     fstat  Bind:    Type:    NDX:   1  Size:  49  Value:   00000000000105d4
+ [ 67]    Name:                                      kill  Bind:    Type:    NDX:   1  Size:  19  Value:   0000000000010770
+ [ 68]    Name:                                     chdir  Bind:    Type:    NDX:   1  Size:  3  Value:   0000000000010854
+ [ 69]    Name:                                      wait  Bind:    Type:    NDX:   1  Size:  23  Value:   0000000000010784
+ [ 70]    Name:                          __call_exitprocs  Bind:    Type:    NDX:   1  Size:  173  Value:   0000000000010432
+ [ 71]    Name:                                    _start  Bind:    Type:    NDX:   1  Size:  66  Value:   00000000000100b0
+ [ 72]    Name:                                     lstat  Bind:    Type:    NDX:   1  Size:  49  Value:   0000000000010640
+ [ 73]    Name:                                      read  Bind:    Type:    NDX:   1  Size:  15  Value:   00000000000105b0
+ [ 74]    Name:                       __register_exitproc  Bind:    Type:    NDX:   1  Size:  99  Value:   00000000000103cc
+ [ 75]    Name:                                    unlink  Bind:    Type:    NDX:   1  Size:  27  Value:   0000000000010724
+ [ 76]    Name:                                         c  Bind:    Type:    NDX:   7  Size:  4  Value:   0000000000011778
+ [ 77]    Name:                                      fork  Bind:    Type:    NDX:   1  Size:  19  Value:   0000000000010758
+ [ 78]    Name:                           __syscall_error  Bind:    Type:    NDX:   1  Size:  31  Value:   0000000000010524
+ [ 79]    Name:                                      sbrk  Bind:    Type:    NDX:   1  Size:  91  Value:   0000000000010870
+ [ 80]    Name:                              gettimeofday  Bind:    Type:    NDX:   1  Size:  31  Value:   00000000000107ba
+ [ 81]    Name:                               __bss_start  Bind:    Type:    NDX:   7  Size:  0  Value:   0000000000011778
+ [ 82]    Name:                                    memset  Bind:    Type:    NDX:   1  Size:  170  Value:   0000000000010322
+ [ 83]    Name:                                      main  Bind:    Type:    NDX:   1  Size:  79  Value:   00000000000101e8
+ [ 84]    Name:                                    getcwd  Bind:    Type:    NDX:   1  Size:  3  Value:   0000000000010858
+ [ 85]    Name:                                     _fini  Bind:    Type:    NDX:   1  Size:  2  Value:   00000000000100f2
+ [ 86]    Name:                                    atexit  Bind:    Type:    NDX:   1  Size:  11  Value:   000000000001023a
+ [ 87]    Name:                               _impure_ptr  Bind:    Type:    NDX:   6  Size:  8  Value:   0000000000011770
+ [ 88]    Name:                                     ftime  Bind:    Type:    NDX:   1  Size:  11  Value:   000000000001083c
+ [ 89]    Name:                                      stat  Bind:    Type:    NDX:   1  Size:  57  Value:   0000000000010606
+ [ 90]    Name:                                    access  Bind:    Type:    NDX:   1  Size:  27  Value:   00000000000106ac
+ [ 91]    Name:                                    _edata  Bind:    Type:    NDX:   6  Size:  0  Value:   0000000000011778
+ [ 92]    Name:                                      _end  Bind:    Type:    NDX:   8  Size:  0  Value:   00000000000117d0
+ [ 93]    Name:                                      link  Bind:    Type:    NDX:   1  Size:  31  Value:   0000000000010704
+ [ 94]    Name:                                      exit  Bind:    Type:    NDX:   1  Size:  33  Value:   0000000000010248
+ [ 95]    Name:                                         a  Bind:    Type:    NDX:   6  Size:  4  Value:   0000000000011760
+ [ 96]    Name:                                    openat  Bind:    Type:    NDX:   1  Size:  27  Value:   0000000000010580
+ [ 97]    Name:                                     _exit  Bind:    Type:    NDX:   1  Size:  25  Value:   00000000000108cc
+ [ 98]    Name:                                      open  Bind:    Type:    NDX:   1  Size:  31  Value:   0000000000010560
+ [ 99]    Name:                                     close  Bind:    Type:    NDX:   1  Size:  27  Value:   00000000000106e8
+mem = 0

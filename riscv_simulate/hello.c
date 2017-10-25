@@ -28,10 +28,16 @@ void qsort(int a[], int l, int r)
 int main(void) 
 {
 	
-	for(int i= 0; i < 10; i ++)
-	{
-		x[i] = 10 - i;
-	}
-	//qsort(x, 0, 9);
+	x[0] = 10;
+	x[1] = 4;
+	x[2] = 7;
+	x[3] = 18;
+	x[4] = 5;
+	x[5] = 2;
+	x[6] = 2;
+	x[7] = 20;
+	x[8] = 0;
+	x[9] = 9;
+	qsort(x, 0, 9);
 	return 0;
 }

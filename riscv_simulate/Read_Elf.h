@@ -106,7 +106,7 @@ typedef struct
 } Elf64_Phdr;
 
 
-void read_elf();
+void read_elf(char *fileName, char *globalVar);
 void read_Elf_header();
 void read_elf_sections();
 void read_symtable();
@@ -125,7 +125,9 @@ unsigned int vadr=0;
 unsigned int vdadr = 0;
 //全局数据段在内存的地址
 unsigned long long gp=0;
-
+//global variable address where it stores the answer
+unsigned long long globalAddr = 0;
+unsigned long long globalVarSize = 0;
 //main函数在内存中地址
 unsigned int madr=0;
 

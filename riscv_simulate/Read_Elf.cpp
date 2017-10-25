@@ -25,19 +25,22 @@ unsigned int symsize=0;
 unsigned int stradr=0;
 unsigned int strsize = 0;
 
+char *globalVar;
 
-bool open_file()
+bool open_file(char *fileName)
 {
-	file = fopen("hello","r");
-        elf = fopen("hello.elf", "w");
+	
+	file = fopen(fileName,"r");
+	strcat(fileName, ".elf");
+        elf = fopen(fileName, "w");
 	return true;
 }
 
-void read_elf()
+void read_elf(char *fileName, char *GlobalVar)
 {
-	if(!open_file())
+	if(!open_file(fileName))
 		return;
-
+	globalVar = GlobalVar;
 	fprintf(elf,"ELF Header:\n");
 	read_Elf_header();
 
@@ -56,8 +59,8 @@ void read_elf()
 	fread(&mem, 1, 55, file);
 	fprintf(elf, "mem = %x\n", mem);
 	//set cadr, vadr,csize...
-	printf("cadr = %d\n", cadr);
-	printf("csize = %d\n", csize);
+	//printf("cadr = %d\n", cadr);
+	//printf("csize = %d\n", csize);
 	fclose(elf);
 	//fclose(file);
        
@@ -115,7 +118,7 @@ void read_Elf_header()
 	ssize = elf64_hdr.e_shentsize;
 	snum = elf64_hdr.e_shnum;
 	shstrndx = elf64_hdr.e_shstrndx;
-	printf("sadr = %d\n", sadr);
+	//printf("sadr = %d\n", sadr);
 	//program headers
 	padr = elf64_hdr.e_phoff;
 	psize = elf64_hdr.e_phentsize;
@@ -180,7 +183,7 @@ void read_elf_sections()
 		{
 			stradr = elf64_shdr.sh_addr + elf64_shdr.sh_offset;	
 			strsize = elf64_shdr.sh_size;
-			printf("%d\n", stradr);
+			//printf("%d\n", stradr);
 		}
  	}
 }
@@ -215,16 +218,16 @@ void read_Phdr()
 		{
 			cadr = elf64_phdr.p_offset;
 			vadr = elf64_phdr.p_vaddr;
-			printf("code segment addres:cadr = %08x\n", cadr);
-			printf("virtual code segment addres:vadr = %08x\n", vadr);
+			//printf("code segment addres:cadr = %08x\n", cadr);
+			//printf("virtual code segment addres:vadr = %08x\n", vadr);
 			csize = elf64_phdr.p_filesz;
 		}
 		if(c == 1)
 		{
 			dadr = elf64_phdr.p_offset;
 			vdadr = elf64_phdr.p_vaddr;
-			printf("data segment addres:cadr = %08x\n", dadr);
-			printf("virtual data segment addres:vdadr = %08x\n", vdadr);	
+			//printf("data segment addres:cadr = %08x\n", dadr);
+			//printf("virtual data segment addres:vdadr = %08x\n", vdadr);	
 			dsize = elf64_phdr.p_filesz;
 		}
 	}
@@ -268,6 +271,11 @@ void read_symtable()
 		if(strcmp(str+elf64_sym.st_name, "__global_pointer$") == 0)
 		{
 		        gp = elf64_sym.st_value;	
+		}
+		if(strcmp(str+elf64_sym.st_name, globalVar)==0)
+		{
+			globalAddr = elf64_sym.st_value;
+			globalVarSize = elf64_sym.st_size;	
 		}
 
 	}

@@ -218,7 +218,43 @@ void Run()
 		//mulh rd, rs1, rs2
 		else if(fuc3 == F3_MULH && fuc7 == F7_MULH)
 		{
-			reg[rd] = (reg[rs] * reg[rt]);
+			short Rs[64] = {};
+			short Rt[64] = {};
+			short Rd[128] = {};
+			int x = 0;
+			for(int i = 0; i < 64; i ++)
+			{
+				Rs[i] = (reg[rs]>> i) & 1;	
+			}
+			for(int i = 0; i < 64; i ++)
+			{
+				Rt[i] = (reg[rt] >> i) & 1;	
+			}
+			for(int i = 0; i < 64; i ++)
+			{
+				x = 0;
+				if(Rt[i] == 1)
+				{
+					int j = i;
+					for(int k = 0; k < 64; k ++)
+					{
+						short temp = Rd[j + k];
+						Rd[j + k] = (Rd[j + k] + Rs[k] + x) % 2;
+						x= (temp + Rs[k] + x) / 2;
+					}
+					Rd[j + 64] = x;
+				}
+				
+			}	
+			reg[rd] = 0;
+			for(int i = 0; i < 64; i ++)
+			{
+				if(Rd[i + 64] == 1)
+				reg[rd] = reg[rd] | (1 << i);
+
+			}
+
+			//reg[rd] = (reg[rs] * reg[rt]);
 		}
 		//slt rd, rs1, rs2
 		else if(fuc3 == F3_SLT && fuc7 == F7_SLT)
@@ -284,6 +320,12 @@ void Run()
 			reg[rd] = reg[rs] - reg[rt];
 			if(debug)
 			printf("subw rs=%016llx, rt=%016llx ", reg[rs], reg[rt]);
+		}
+		else if(fuc3 == 0 && fuc7 == 1)
+		{
+			reg[rd] = reg[rs] * reg[rt];
+			if(debug)
+			printf("mulw rs=%016llx, rt=%016llx ", reg[rs], reg[rt]);
 		}
 		if(debug)
 		printf("rd = %016llx\n",reg[rd]);

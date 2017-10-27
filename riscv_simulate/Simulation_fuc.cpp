@@ -37,10 +37,6 @@ char Command[20];
 void load_memory()
 {
 	
-	//find where main is 
-	//madr = madr - 0x10000;
-	//load all
-	
 	fseek(file,cadr,SEEK_SET);
 	
 	fread(&memory[vadr],1,csize,file);
@@ -50,19 +46,9 @@ void load_memory()
 	printf("----------------basic information---------------\n");
 	printf("entry = %08x\n", entry);
 	printf("endPC = %08x\n",endPC);
-	//vadr=vadr>>2;
-	//vdadr = vdadr>>2;
-	//only function main in memory
-	//entry = entry >>2;
 	
-	//endPC = endPC>>2;	
-	//havn't load .data yet
-	//printf("gp = %08x\n", gp);
-	//gp = gp >> 2;
 	printf("gp = %08x\n", gp);
-	//here csize represents the number of instructions
-	//csize=csize>>2;
-	//dsize=dsize>>2;
+	
 
 	
 	fclose(file);
@@ -95,8 +81,9 @@ int main(int argc, char **argv)
 	
 	reg[2]=MAX/2;//栈基址 （sp寄存器）
 	printf("end = %08x\n", endPC-1);
-	printf("------------------------------------------------\n");
+	printf("-----------------instruction--------------------\n");
 	simulate();
+	printf("-------------------answer-----------------------\n");
 	for(int i = 0; i < (globalVarSize/4); i ++)
 	{
 		printf("%d ", memory[globalAddr +i*4]);				
@@ -323,7 +310,10 @@ void Run()
 		}
 		else if(fuc3 == 0 && fuc7 == 1)
 		{
+			
 			reg[rd] = reg[rs] * reg[rt];
+			unsigned int temp = (unsigned int)reg[rd];
+			reg[rd] = ext_signed(temp, 32);
 			if(debug)
 			printf("mulw rs=%016llx, rt=%016llx ", reg[rs], reg[rt]);
 		}
@@ -475,15 +465,13 @@ void Run()
         //lw rd, offset(rs)
         else if(fuc3 == 2)
         {
-		//memcpy(reg + rd, memory + reg[rs] + imm, 4);
-		//memset(reg + rd + 4, 0, 4);
 		
 		unsigned int temp;
 		unsigned int t1 = memory[reg[rs] + imm];
 		unsigned int t2 = memory[reg[rs] + imm + 1];
 		unsigned int t3 = memory[reg[rs] + imm + 2];
 		unsigned int t4 = memory[reg[rs] + imm + 3];
-		//temp = (memory[reg[rs] + imm] & 0x000000ff) + ((memory[reg[rs] + imm + 1] &0x000000ff)<< 8) + ((memory[reg[rs] + imm + 2] &0x000000ff)<< 16) + ((memory[reg[rs] + imm + 3] &0x000000ff)<< 24);
+		
 		temp = t1 + (t2 << 8) + (t3 << 16) + (t4 << 24);
 		
         	reg[rd] = ext_signed(temp, 32);
@@ -495,7 +483,6 @@ void Run()
         //ld rd, offset(rs)
         else
         {
-		//memcpy(reg + rd, memory + reg[rs] + imm, 8);
 		
         	unsigned long long int low;
 		unsigned long long int high;

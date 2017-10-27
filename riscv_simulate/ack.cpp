@@ -1,5 +1,5 @@
 
-int c = 0;
+int c[4][5];
 
 //Ackermann
 int ack(int n, int x)
@@ -13,6 +13,8 @@ int ack(int n, int x)
 int main(void) 
 {	
 	
-	c = ack(3,3);
+	for(int i = 0; i < 4; i ++)
+		for(int j = 0; j < 5; j ++)
+			c[i][j] = ack(i, j);
 	return 0;
 }
